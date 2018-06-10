@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iTunes File Mover", "iTunes File Mover\iTunes File Mover.vcxproj", "{6BDBBF42-FFD1-42CD-8AD1-3009B9E4797C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iTunes Database Editor", "iTunes Database Editor\iTunes Database Editor.vcxproj", "{07F80144-0D49-4A2A-BAC0-54A413B27116}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{6BDBBF42-FFD1-42CD-8AD1-3009B9E4797C}.Release|x64.Build.0 = Release|x64
 		{6BDBBF42-FFD1-42CD-8AD1-3009B9E4797C}.Release|x86.ActiveCfg = Release|Win32
 		{6BDBBF42-FFD1-42CD-8AD1-3009B9E4797C}.Release|x86.Build.0 = Release|Win32
+		{07F80144-0D49-4A2A-BAC0-54A413B27116}.Debug|x64.ActiveCfg = Debug|x64
+		{07F80144-0D49-4A2A-BAC0-54A413B27116}.Debug|x64.Build.0 = Debug|x64
+		{07F80144-0D49-4A2A-BAC0-54A413B27116}.Debug|x86.ActiveCfg = Debug|Win32
+		{07F80144-0D49-4A2A-BAC0-54A413B27116}.Debug|x86.Build.0 = Debug|Win32
+		{07F80144-0D49-4A2A-BAC0-54A413B27116}.Release|x64.ActiveCfg = Release|x64
+		{07F80144-0D49-4A2A-BAC0-54A413B27116}.Release|x64.Build.0 = Release|x64
+		{07F80144-0D49-4A2A-BAC0-54A413B27116}.Release|x86.ActiveCfg = Release|Win32
+		{07F80144-0D49-4A2A-BAC0-54A413B27116}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
