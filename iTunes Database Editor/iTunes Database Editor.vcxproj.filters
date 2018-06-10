@@ -30,12 +30,18 @@
     <ClInclude Include="iTunes COM\iTunesCOMInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="THeaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="iTunesOperations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConversionHelpers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
