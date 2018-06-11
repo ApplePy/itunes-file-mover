@@ -3,6 +3,7 @@
 #include "iTunesOperations.h"
 #include <iostream>
 
+using namespace iTunesHelpers;
 
 iTunesOperations::iTunesOperations()
 {
@@ -31,7 +32,11 @@ void iTunesOperations::moveTrack(std::tstring sourcePrefix, std::tstring destina
 	ITTrackKind trackType;
 	HandleCOMErrors(track->get_Kind(&trackType));
 
-	// TODO: Continue
+	if (trackType != ITTrackKindFile) return;
+
+	auto fileTrack = GetNewInterface<IITFileOrCDTrack>(static_cast<IUnknown*>(track.get()), IID_IITFileOrCDTrack);
+
+	
 }
 
 
@@ -64,21 +69,4 @@ void iTunesOperations::libraryMap(std::function<void(trackPtr&)> processTrack)
 
 		processTrack(track);
 	}
-}
-
-
-// TODO: Delete - just a testing ground
-void trial()
-{
-	iTunesOperations test;
-
-	trackPtr ok;
-
-	test.moveTrack(_T("1"), _T("2"), ok);
-
-	
-	auto binded = std::bind(&iTunesOperations::moveTrack, &test, _T("1"), _T("2"), std::placeholders::_1);
-	binded(ok);
-
-	test.libraryMap(binded);
 }
