@@ -3,15 +3,17 @@
 #include "iTunes COM/iTunesCOMInterface.h"
 #include "ConversionHelpers.h"
 
+typedef std::unique_ptr<IITTrack, std::function<void(IITTrack*)>> trackPtr;
+
 class iTunesOperations
 {
 public:
 	iTunesOperations();
-	void moveLibrary(std::tstring sourcePrefix, std::tstring destinationPrefix);
+	void moveTrack(std::tstring sourcePrefix, std::tstring destinationPrefix, trackPtr& track);
+	void libraryMap(std::function<void(trackPtr&)> processTrack);
 	virtual ~iTunesOperations();
 
 private:
-	void processTrack(std::unique_ptr<IITTrack,std::function<void(IITTrack*)>>& track);
 	std::unique_ptr<IiTunes, std::function<void(IiTunes*)>> iTunes;
 };
 

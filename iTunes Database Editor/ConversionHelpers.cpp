@@ -40,3 +40,45 @@ std::string ConvertWCSToMBS(const std::wstring& wcs)
 
 	return mbs;
 }
+
+
+/// <summary> Converts a tstring into std::string. </summary>
+/// <param name="str"> The tstring to convert. </param>
+/// <returns> a std::string </returns>
+std::string ConvertToMBS(const std::tstring& str)
+{
+#ifdef _UNICODE
+	std::string mbsString(ConvertWCSToMBS(str));
+#else
+	std::string mbsString(str);
+#endif
+	return mbsString;
+}
+
+
+/// <summary> Converts a tstring into std::wstring. </summary>
+/// <param name="str"> The tstring to convert. </param>
+/// <returns> a std::wstring </returns>
+std::wstring ConvertToWCS(const std::tstring& str)
+{
+#ifndef _UNICODE
+	std::wstring wcsString(ConvertMBSToWCS(str));
+#else
+	std::wstring wcsString(str);
+#endif
+	return wcsString;
+}
+
+
+/// <summary> Handles checking for success of a COM call, and throws an std::runtime_error if it fails. </summary>
+/// <param name="callResult"> The result to check. </param>
+/// <param name="errExplanation"> Custom text to use for the error explanation. </param>
+void HandleCOMErrors(HRESULT callResult, const std::tstring errExplanation)
+{
+	if (callResult != S_OK)
+	{
+		std::tstringstream ss;
+		ss << errExplanation << callResult;
+		throw std::runtime_error(ConvertToMBS(ss.str().data()));
+	}
+}

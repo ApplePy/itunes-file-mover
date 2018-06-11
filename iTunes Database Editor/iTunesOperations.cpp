@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ConversionHelpers.h"
 #include "iTunesOperations.h"
+#include <iostream>
 
 
 iTunesOperations::iTunesOperations()
@@ -9,22 +10,29 @@ iTunesOperations::iTunesOperations()
 	HRESULT comInitRes = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 	if (comInitRes != S_OK && comInitRes != S_FALSE)
 	{
-		std::stringstream ss;
-		ss << "Inititalization of COM library failed. Result was: " << comInitRes;
-		throw std::runtime_error(ss.str().data());
+		std::tstringstream ss;
+		ss << _T("Inititalization of COM library failed. Result was: ") << comInitRes;
+		throw std::runtime_error(ConvertToMBS(ss.str().data()));
 	}
 
 	// Get the iTunes library object
 	IiTunes* iTunesTmpRawPtr;
 	HandleCOMErrors(
 		CoCreateInstance(CLSID_iTunesApp, NULL, CLSCTX_LOCAL_SERVER, IID_IiTunes, reinterpret_cast<PVOID *>(&iTunesTmpRawPtr)),
-		"Instantiation of iTunes COM interface failed. Result was: ");
+		_T("Instantiation of iTunes COM interface failed. Result was: "));
 
 	// Move the raw pointer into a smart pointer, and give it a safe-delete function.
 	iTunes = std::unique_ptr <IiTunes, std::function<void(IiTunes*)>>(iTunesTmpRawPtr, SafeDeleteCOMObject<IiTunes>);
 	iTunesTmpRawPtr = NULL;
 }
 
+void iTunesOperations::moveTrack(std::tstring sourcePrefix, std::tstring destinationPrefix, trackPtr& track)
+{
+	ITTrackKind trackType;
+	HandleCOMErrors(track->get_Kind(&trackType));
+
+	// TODO: Continue
+}
 
 
 iTunesOperations::~iTunesOperations()
@@ -34,17 +42,9 @@ iTunesOperations::~iTunesOperations()
 	CoUninitialize();
 }
 
-void iTunesOperations::processTrack(std::unique_ptr<IITTrack, std::function<void(IITTrack*)>>& track)
+
+void iTunesOperations::libraryMap(std::function<void(trackPtr&)> processTrack)
 {
-	ITTrackKind trackType;
-	HandleCOMErrors(track->get_Kind(&trackType));
-}
-
-
-void iTunesOperations::moveLibrary(std::tstring sourcePrefix, std::tstring destinationPrefix)
-{
-	// TODO: I don't like this pattern. Could other processes use the track?
-
 	IITLibraryPlaylist* mainLibraryRaw;
 	HandleCOMErrors(iTunes->get_LibraryPlaylist(&mainLibraryRaw));
 	auto mainLibrary = WrapRawPtr(mainLibraryRaw);
@@ -64,4 +64,21 @@ void iTunesOperations::moveLibrary(std::tstring sourcePrefix, std::tstring desti
 
 		processTrack(track);
 	}
+}
+
+
+// TODO: Delete - just a testing ground
+void trial()
+{
+	iTunesOperations test;
+
+	trackPtr ok;
+
+	test.moveTrack(_T("1"), _T("2"), ok);
+
+	
+	auto binded = std::bind(&iTunesOperations::moveTrack, &test, _T("1"), _T("2"), std::placeholders::_1);
+	binded(ok);
+
+	test.libraryMap(binded);
 }

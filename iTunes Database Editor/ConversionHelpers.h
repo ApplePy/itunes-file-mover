@@ -13,18 +13,22 @@ std::wstring ConvertMBSToWCS(const std::string& mbs);
 std::string ConvertWCSToMBS(const std::wstring& wcs);
 
 
+/// <summary> Converts a tstring into std::string. </summary>
+/// <param name="str"> The tstring to convert. </param>
+/// <returns> a std::string </returns>
+std::string ConvertToMBS(const std::tstring& str);
+
+
+/// <summary> Converts a tstring into std::wstring. </summary>
+/// <param name="str"> The tstring to convert. </param>
+/// <returns> a std::wstring </returns>
+std::wstring ConvertToWCS(const std::tstring& str);
+
+
 /// <summary> Handles checking for success of a COM call, and throws an std::runtime_error if it fails. </summary>
 /// <param name="callResult"> The result to check. </param>
-/// <param name="errText"> Custom text to use for the error explanation. </param>
-void HandleCOMErrors(HRESULT callResult, std::string errText = "Instantiation of an iTunes COM object failed. Result was: ")
-{
-	if (callResult != S_OK)
-	{
-		std::stringstream ss;
-		ss << errText << callResult;
-		throw std::runtime_error(ss.str().data());
-	}
-}
+/// <param name="errExplanation"> Custom text to use for the error explanation. </param>
+void HandleCOMErrors(HRESULT callResult, const std::tstring errExplanation = _T("Instantiation of an iTunes COM object failed. Result was: "));
 
 
 /// <summary> Ensures safe deletion of a COM object pointer. </summary>
