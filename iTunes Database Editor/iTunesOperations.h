@@ -3,8 +3,9 @@
 #include <functional>
 #include "THeaders.h"
 #include "iTunes COM/iTunesCOMInterface.h"
+#include "ConversionHelpers.h"
 
-typedef std::unique_ptr<IITTrack, std::function<void(IITTrack*)>> trackPtr;
+using trackPtr = ComPtr<IITTrack>;
 
 class iTunesOperations
 {
@@ -15,6 +16,6 @@ public:
 	virtual ~iTunesOperations();
 
 private:
-	std::unique_ptr<IiTunes, std::function<void(IiTunes*)>> iTunes;
+	ComPtr<IiTunes> iTunes;
 };
 

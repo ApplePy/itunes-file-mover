@@ -6,6 +6,9 @@
 #include <memory>
 #include "THeaders.h"
 
+template <class T>
+using ComPtr = std::unique_ptr<T, std::function<void(T*)>>;
+
 namespace iTunesHelpers
 {
 
@@ -53,16 +56,16 @@ namespace iTunesHelpers
 
 	/// <summary> Creates an std::unique_ptr out of raw pointers, and erases the old raw pointer </summary>
 	template <class T>
-	std::unique_ptr<T, std::function<void(T*)>> WrapRawPtr(T*& ptr)
+	ComPtr<T> WrapRawPtr(T*& ptr)
 	{
-		auto smartPtr = std::unique_ptr<T, std::function<void(T*)>>(ptr, SafeDeleteCOMObject<T>);
+		auto smartPtr = ComPtr<T>(ptr, SafeDeleteCOMObject<T>);
 		ptr = NULL;
 		return smartPtr;
 	}
 
 
 	template <class T>
-	std::unique_ptr<T, std::function<void(T*)>> GetNewInterface(IUnknown* COMObject, const IID requestedInterface)
+	ComPtr<T> GetNewInterface(IUnknown* COMObject, const IID requestedInterface)
 	{
 		T* holder;
 		COMObject->QueryInterface(requestedInterface, (void**)&holder);

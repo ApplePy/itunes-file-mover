@@ -23,7 +23,7 @@ iTunesOperations::iTunesOperations()
 		_T("Instantiation of iTunes COM interface failed. Result was: "));
 
 	// Move the raw pointer into a smart pointer, and give it a safe-delete function.
-	iTunes = std::unique_ptr <IiTunes, std::function<void(IiTunes*)>>(iTunesTmpRawPtr, SafeDeleteCOMObject<IiTunes>);
+	iTunes = ComPtr<IiTunes>(iTunesTmpRawPtr, SafeDeleteCOMObject<IiTunes>);
 	iTunesTmpRawPtr = NULL;
 }
 
