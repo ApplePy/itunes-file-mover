@@ -156,6 +156,7 @@
     <ClCompile Include="ConversionHelpers.cpp" />
     <ClCompile Include="iTunes COM\iTunesCOMInterface_i.c" />
     <ClCompile Include="iTunesOperations.cpp" />
+    <ClCompile Include="THeaders.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

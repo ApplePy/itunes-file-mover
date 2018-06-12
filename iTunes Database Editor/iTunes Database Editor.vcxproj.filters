@@ -38,5 +38,8 @@
     <ClCompile Include="iTunes COM\iTunesCOMInterface_i.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="THeaders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

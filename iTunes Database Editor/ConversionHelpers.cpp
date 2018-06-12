@@ -49,7 +49,7 @@ namespace iTunesHelpers
 	/// <returns> a std::string </returns>
 	std::string ConvertToMBS(const std::tstring& str)
 	{
-#ifdef _UNICODE
+#if defined(UNICODE) || defined(_UNICODE)
 		std::string mbsString(ConvertWCSToMBS(str));
 #else
 		std::string mbsString(str);
@@ -63,10 +63,10 @@ namespace iTunesHelpers
 	/// <returns> a std::wstring </returns>
 	std::wstring ConvertToWCS(const std::tstring& str)
 	{
-#ifndef _UNICODE
-		std::wstring wcsString(ConvertMBSToWCS(str));
-#else
+#if defined(UNICODE) || defined(_UNICODE)
 		std::wstring wcsString(str);
+#else
+		std::wstring wcsString(ConvertMBSToWCS(str));
 #endif
 		return wcsString;
 	}

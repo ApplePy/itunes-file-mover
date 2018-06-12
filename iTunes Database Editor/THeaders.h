@@ -1,6 +1,7 @@
 #pragma once
 #include <tchar.h>
 #include <string>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 
@@ -17,6 +18,12 @@ namespace std
 	typedef basic_fstream<TCHAR>        tfstream;
 
 	typedef basic_stringstream<TCHAR>   tstringstream;
+
+#if defined(UNICODE) || defined(_UNICODE)
+	extern wostream& tcout;
+#else
+	extern ostream& tcout;
+#endif
 }
 
 // Source: http://www.rioki.org/2010/09/24/tstring.html

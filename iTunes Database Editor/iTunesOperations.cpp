@@ -40,7 +40,7 @@ void iTunesOperations::moveTrack(std::tstring sourcePrefix, std::tstring destina
 	HandleCOMErrors(fileTrack->get_Location(&locationRaw));
 	std::wstring location(locationRaw);
 
-	std::cout << "Placeholder" << std::endl;
+	std::tcout << location.c_str() << std::endl;
 }
 
 
