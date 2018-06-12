@@ -15,12 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="iTunesOperations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -35,13 +29,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="iTunesOperations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ConversionHelpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="iTunes COM\iTunesCOMInterface_i.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

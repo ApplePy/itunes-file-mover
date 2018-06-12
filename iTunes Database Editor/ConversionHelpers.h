@@ -1,5 +1,10 @@
 #pragma once
-#include "stdafx.h"
+#include <Windows.h>
+#include <tchar.h>
+#include <string>
+#include <functional>
+#include <memory>
+#include "THeaders.h"
 
 namespace iTunesHelpers
 {

@@ -1,7 +1,7 @@
-#include "stdafx.h"
+#include <iostream>
+#include <combaseapi.h>
 #include "ConversionHelpers.h"
 #include "iTunesOperations.h"
-#include <iostream>
 
 using namespace iTunesHelpers;
 
@@ -36,7 +36,11 @@ void iTunesOperations::moveTrack(std::tstring sourcePrefix, std::tstring destina
 
 	auto fileTrack = GetNewInterface<IITFileOrCDTrack>(static_cast<IUnknown*>(track.get()), IID_IITFileOrCDTrack);
 
-	
+	BSTR locationRaw = NULL;
+	HandleCOMErrors(fileTrack->get_Location(&locationRaw));
+	std::wstring location(locationRaw);
+
+	std::cout << "Placeholder" << std::endl;
 }
 
 

@@ -1,7 +1,8 @@
 #pragma once
-#include "stdafx.h"
+#include <memory>
+#include <functional>
+#include "THeaders.h"
 #include "iTunes COM/iTunesCOMInterface.h"
-#include "ConversionHelpers.h"
 
 typedef std::unique_ptr<IITTrack, std::function<void(IITTrack*)>> trackPtr;
 
