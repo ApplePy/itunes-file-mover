@@ -32,16 +32,20 @@ void iTunesOperations::moveTrack(std::tstring sourcePrefix, std::tstring destina
 	ComPtr<IITFileOrCDTrack> trackFileObject;
 	auto location = GetFileName(track, &trackFileObject);
 
+	if (location.length() == 0 || location.find(sourcePrefix) != 0) return;
+
 #if defined(_DEBUG) || defined(DEBUG)
 	std::tcout << location.c_str() << std::endl;
 #endif
 
-	if (location.length() == 0 || location.find(sourcePrefix) != 0) return;
-
 	location.replace(0, sourcePrefix.length(), destinationPrefix);
 
+#if defined(_DEBUG) || defined(DEBUG)
+	std::tcout << "Would rewrite to: " << location.c_str() << std::endl;
+#else
 	BSTR locationCOM = const_cast<wchar_t*>(ConvertToWCS(location).data());
 	HandleCOMErrors(trackFileObject->put_Location(locationCOM));
+#endif
 }
 
 iTunesOperations::~iTunesOperations()
@@ -72,7 +76,7 @@ std::tstring iTunesOperations::GetFileName(const trackPtr& track, ComPtr<IITFile
 	return location;
 }
 
-void iTunesOperations::libraryMap(std::function<void(trackPtr&)> processTrack)
+void iTunesOperations::libraryMap(std::function<void(trackPtr&)> processTrack, std::function<void(std::exception)> exceptionHandler)
 {
 	IITLibraryPlaylist* mainLibraryRaw;
 	HandleCOMErrors(iTunes->get_LibraryPlaylist(&mainLibraryRaw));
@@ -87,10 +91,23 @@ void iTunesOperations::libraryMap(std::function<void(trackPtr&)> processTrack)
 
 	for (long trackIndex = 1; trackIndex <= libraryTracksCount; ++trackIndex)
 	{
-		IITTrack* trackRaw;
-		HandleCOMErrors(libraryTracks->get_Item(trackIndex, &trackRaw));
-		auto track = WrapRawPtr(trackRaw);
+		try
+		{
+			IITTrack* trackRaw;
+			HandleCOMErrors(libraryTracks->get_Item(trackIndex, &trackRaw));
+			auto track = WrapRawPtr(trackRaw);
 
-		processTrack(track);
+			processTrack(track);
+		}
+		catch (std::exception e)
+		{
+			exceptionHandler(e);
+		}
 	}
+
+}
+
+std::tstring iTunesOperations::GetFileName(const trackPtr & track)
+{
+	return GetFileName(track, NULL);
 }
