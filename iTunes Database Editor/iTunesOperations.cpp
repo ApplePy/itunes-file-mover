@@ -27,22 +27,22 @@ iTunesOperations::iTunesOperations()
 	iTunesTmpRawPtr = NULL;
 }
 
-void iTunesOperations::moveTrack(std::tstring sourcePrefix, std::tstring destinationPrefix, trackPtr& track)
+void iTunesOperations::moveTrack(std::tstring sourcePrefix, std::tstring destinationPrefix, const trackPtr& track)
 {
-	ITTrackKind trackType;
-	HandleCOMErrors(track->get_Kind(&trackType));
+	ComPtr<IITFileOrCDTrack> trackFileObject;
+	auto location = GetFileName(track, &trackFileObject);
 
-	if (trackType != ITTrackKindFile) return;
-
-	auto fileTrack = GetNewInterface<IITFileOrCDTrack>(static_cast<IUnknown*>(track.get()), IID_IITFileOrCDTrack);
-
-	BSTR locationRaw = NULL;
-	HandleCOMErrors(fileTrack->get_Location(&locationRaw));
-	std::wstring location(locationRaw);
-
+#if defined(_DEBUG) || defined(DEBUG)
 	std::tcout << location.c_str() << std::endl;
-}
+#endif
 
+	if (location.length() == 0 || location.find(sourcePrefix) != 0) return;
+
+	location.replace(0, sourcePrefix.length(), destinationPrefix);
+
+	BSTR locationCOM = const_cast<wchar_t*>(ConvertToWCS(location).data());
+	HandleCOMErrors(trackFileObject->put_Location(locationCOM));
+}
 
 iTunesOperations::~iTunesOperations()
 {
@@ -51,6 +51,26 @@ iTunesOperations::~iTunesOperations()
 	CoUninitialize();
 }
 
+std::tstring iTunesOperations::GetFileName(const trackPtr& track, ComPtr<IITFileOrCDTrack>* fileObject)
+{
+	ITTrackKind trackType;
+	HandleCOMErrors(track->get_Kind(&trackType));
+
+	if (trackType != ITTrackKindFile) return std::tstring();
+
+	// Convert the track type into a new type that contains the file path (since some tracks have no file, i.e. internet streams)
+	auto fileTrack = GetNewInterface<IITFileOrCDTrack>(static_cast<IUnknown*>(track.get()), IID_IITFileOrCDTrack);
+
+	BSTR locationRaw = NULL;
+	HandleCOMErrors(fileTrack->get_Location(&locationRaw));
+	auto location = ConvertToTS(locationRaw);
+
+	if (fileObject != NULL)
+	{
+		*fileObject = std::move(fileTrack);
+	}
+	return location;
+}
 
 void iTunesOperations::libraryMap(std::function<void(trackPtr&)> processTrack)
 {

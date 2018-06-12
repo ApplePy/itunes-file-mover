@@ -72,6 +72,33 @@ namespace iTunesHelpers
 	}
 
 
+	/// <summary> Converts a std::wstring into a tstring. </summary>
+	/// <param name="str"> The wstring to convert. </param>
+	/// <returns> a std::tstring </returns>
+	std::tstring ConvertToTS(const std::wstring& str)
+	{
+#if defined(UNICODE) || defined(_UNICODE)
+		return std::tstring(str);
+#else
+		return std::tstring(ConvertWCSToMBS(str));
+#endif
+	}
+
+
+	/// <summary> Converts a std::string into a tstring. </summary>
+	/// <param name="str"> The std::string to convert. </param>
+	/// <returns> a std::tstring </returns>
+	std::tstring ConvertToTS(const std::string& str)
+	{
+#if defined(UNICODE) || defined(_UNICODE)
+		return std::tstring(ConvertMBSToWCS(str));
+		
+#else
+		return std::tstring(str);
+#endif
+	}
+
+
 	/// <summary> Handles checking for success of a COM call, and throws an std::runtime_error if it fails. </summary>
 	/// <param name="callResult"> The result to check. </param>
 	/// <param name="errExplanation"> Custom text to use for the error explanation. </param>

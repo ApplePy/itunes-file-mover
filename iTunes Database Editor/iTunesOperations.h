@@ -11,11 +11,13 @@ class iTunesOperations
 {
 public:
 	iTunesOperations();
-	void moveTrack(std::tstring sourcePrefix, std::tstring destinationPrefix, trackPtr& track);
+	void moveTrack(std::tstring sourcePrefix, std::tstring destinationPrefix, const trackPtr& track);
 	void libraryMap(std::function<void(trackPtr&)> processTrack);
 	virtual ~iTunesOperations();
 
 private:
 	ComPtr<IiTunes> iTunes;
+
+	std::tstring GetFileName(const trackPtr& track, ComPtr<IITFileOrCDTrack>* fileObject = NULL);
 };
 
