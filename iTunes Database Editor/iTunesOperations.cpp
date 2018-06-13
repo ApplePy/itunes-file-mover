@@ -30,8 +30,8 @@ iTunesOperations::iTunesOperations()
 void iTunesOperations::moveTrack(std::tstring sourcePrefix, std::tstring destinationPrefix, const trackPtr& track)
 {
 	ComPtr<IITFileOrCDTrack> trackFileObject;
-	auto location = GetFileName(track, &trackFileObject);
-
+	auto location = GetFileName(track, &trackFileObject, true);
+		
 	if (location.length() == 0 || location.find(sourcePrefix) != 0) return;
 
 #if defined(_DEBUG) || defined(DEBUG)
@@ -55,25 +55,37 @@ iTunesOperations::~iTunesOperations()
 	CoUninitialize();
 }
 
-std::tstring iTunesOperations::GetFileName(const trackPtr& track, ComPtr<IITFileOrCDTrack>* fileObject)
+std::tstring iTunesOperations::GetFileName(const trackPtr& track, ComPtr<IITFileOrCDTrack>* fileObject, bool suppressFileNotFound)
 {
 	ITTrackKind trackType;
 	HandleCOMErrors(track->get_Kind(&trackType));
 
-	if (trackType != ITTrackKindFile) return std::tstring();
+	if (trackType != ITTrackKindFile) throw std::domain_error("Track is not a file.");
 
 	// Convert the track type into a new type that contains the file path (since some tracks have no file, i.e. internet streams)
 	auto fileTrack = GetNewInterface<IITFileOrCDTrack>(static_cast<IUnknown*>(track.get()), IID_IITFileOrCDTrack);
 
-	BSTR locationRaw = NULL;
-	HandleCOMErrors(fileTrack->get_Location(&locationRaw));
-	auto location = ConvertToTS(locationRaw);
-
-	if (fileObject != NULL)
+	try
 	{
-		*fileObject = std::move(fileTrack);
+		BSTR locationRaw = NULL;
+		HandleCOMErrors(fileTrack->get_Location(&locationRaw));
+		auto location = ConvertToTS(locationRaw);
+
+		if (fileObject != NULL)
+		{
+			*fileObject = std::move(fileTrack);
+		}
+		return location;
 	}
-	return location;
+	catch (std::runtime_error e)
+	{
+		if (fileObject != NULL && suppressFileNotFound == true)
+		{
+			*fileObject = std::move(fileTrack);
+			return std::tstring();
+		}
+		throw e;
+	}
 }
 
 void iTunesOperations::libraryMap(std::function<void(trackPtr&)> processTrack, std::function<void(std::exception)> exceptionHandler)
@@ -107,7 +119,7 @@ void iTunesOperations::libraryMap(std::function<void(trackPtr&)> processTrack, s
 
 }
 
-std::tstring iTunesOperations::GetFileName(const trackPtr & track)
+std::tstring iTunesOperations::GetFileName(const trackPtr & track, bool suppressFileNotFound)
 {
-	return GetFileName(track, NULL);
+	return GetFileName(track, NULL, suppressFileNotFound);
 }

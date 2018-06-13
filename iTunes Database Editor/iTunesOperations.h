@@ -13,12 +13,12 @@ public:
 	iTunesOperations();
 	void moveTrack(std::tstring sourcePrefix, std::tstring destinationPrefix, const trackPtr& track);
 	void libraryMap(std::function<void(trackPtr&)> processTrack, std::function<void(std::exception)> exceptionHandler = [](std::exception e) {throw e; });
-	std::tstring GetFileName(const trackPtr& track);
-	virtual ~iTunesOperations();
+	std::tstring GetFileName(const trackPtr& track, bool suppressFileNotFound = false);
+	~iTunesOperations();
 
 private:
 	ComPtr<IiTunes> iTunes;
 
-	std::tstring GetFileName(const trackPtr& track, ComPtr<IITFileOrCDTrack>* fileObject);
+	std::tstring GetFileName(const trackPtr& track, ComPtr<IITFileOrCDTrack>* fileObject, bool suppressFileNotFound = false);
 };
 

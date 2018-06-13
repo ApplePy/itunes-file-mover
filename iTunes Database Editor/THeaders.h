@@ -19,11 +19,17 @@ namespace std
 
 	typedef basic_stringstream<TCHAR>   tstringstream;
 
+	extern tostream& tcout;
+
+	template <class T>
+	inline tstring to_tstring(T _Val)
+	{	
 #if defined(UNICODE) || defined(_UNICODE)
-	extern wostream& tcout;
+		return to_wstring(_Val);
 #else
-	extern ostream& tcout;
+		return to_string(_Val);
 #endif
+	}
 }
 
 // Source: http://www.rioki.org/2010/09/24/tstring.html
